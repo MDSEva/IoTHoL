@@ -49,10 +49,16 @@ namespace IoTHOL
         public IoTHub()
         {
             this.InitializeComponent();
-
-            //Todo
-            deviceClient = DeviceClient.CreateFromConnectionString("==Your connection string==", TransportType.Http1);
-
+            try
+            {
+                //Todo
+                deviceClient = DeviceClient.CreateFromConnectionString("==Your connection string==", TransportType.Http1);
+            }
+            catch (Exception ex)
+            {
+                rootPage.NotifyUser("Connection String error", NotifyType.ErrorMessage);
+                return;
+            }
             ReceiveDataFromAzure();
         }
 
