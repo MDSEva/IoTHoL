@@ -1,0 +1,11 @@
+SELECT
+    System.timestamp AS timestart,
+    ObjectName AS dsplalert,
+    ObjectType AS alerttype,
+    Version AS message,
+    TargetAlarmDevice AS targetalarmdevice
+INTO
+    eventhub
+FROM
+    tempsensors
+WHERE temp>30
