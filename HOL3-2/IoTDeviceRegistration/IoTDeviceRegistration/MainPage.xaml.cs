@@ -18,6 +18,9 @@ using Newtonsoft.Json.Linq;
 using Microsoft.Azure.Devices.Client;
 using Newtonsoft.Json;
 using System.Text;
+//junghwan
+using Microsoft.Azure.Devices.Shared;
+using System.Threading.Tasks;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -29,43 +32,68 @@ namespace IoTDeviceRegistration
     public sealed partial class MainPage : Page
     {
 
-        public const string DeviceID = "Your Device ID "; 
-
+        private const string DeviceID = "test2";
+        private const string DEVICE_CONNECTION_STRING = "HostName=hancomrmsuite2ad15.azure-devices.net;DeviceId=test2;SharedAccessKey=VPwfO44MurYFQZOtvApfToild/DgqrhhaXQ8TemUZkM=";
+        static private Twin deviceTwin;
+        private static DeviceClient deviceClient;
         public MainPage()
         {
-           
+            deviceClient = DeviceClient.CreateFromConnectionString(DEVICE_CONNECTION_STRING, TransportType.Mqtt);
             this.InitializeComponent();
         }
+        static TwinCollection DefaultReportedProperties()
+        {
 
+            TwinCollection reportedproperties = new TwinCollection();
+
+            reportedproperties["Device"] = new
+            {
+                DeviceState = "Normal",
+                Location = new
+                {
+                    Latitude = 37.497942,
+                    Longitude = 127.027621
+                }
+            };
+
+            reportedproperties["System"] = new
+            {
+                Manufacturer = "Hancom MDS Inc.",
+                FirmwareVersion = "1.46",
+                ModelNumber = "MD-112",
+                Platform = "NeoFalcon",
+                Processor = "ARM",
+                SerialNumber = "SER8628"
+            };
+            
+            return reportedproperties;
+
+        }
+        static async Task UpdateReportedProperties(TwinCollection reportedConfig)
+        {
+            await deviceClient.UpdateReportedPropertiesAsync(reportedConfig);
+            Twin updatedtwin = await deviceClient.GetTwinAsync();
+        }
+        
         private static void AssignDeviceProperties(string deviceId, dynamic device)
         {
             dynamic deviceProperties = DeviceSchemaHelper.GetDeviceProperties(device);
             deviceProperties.HubEnabledState = true;
-            deviceProperties.Manufacturer = "Hancom MDS Inc."; 
-            deviceProperties.ModelNumber = "MD-112"; 
-            deviceProperties.SerialNumber = "SER8628";    
-            deviceProperties.FirmwareVersion = "1.46";  
-                                                         
-            deviceProperties.Latitude = 37.399890; 
-            deviceProperties.Longitude = 127.101356;  
         }
 
         public static dynamic BuildDeviceStructure(string deviceId, bool isSimulated)
         {
             JObject device = new JObject();
-
             JObject deviceProps = new JObject();
             deviceProps.Add(DevicePropertiesConstants.DEVICE_ID, deviceId);
             deviceProps.Add(DevicePropertiesConstants.HUB_ENABLED_STATE, null);
             deviceProps.Add(DevicePropertiesConstants.CREATED_TIME, DateTime.UtcNow);
             deviceProps.Add(DevicePropertiesConstants.DEVICE_STATE, "normal");
             deviceProps.Add(DevicePropertiesConstants.UPDATED_TIME, null);
-
             device.Add(DeviceModelConstants.DEVICE_PROPERTIES, deviceProps);
             device.Add(DeviceModelConstants.COMMANDS, new JArray());
             device.Add(DeviceModelConstants.COMMAND_HISTORY, new JArray());
             device.Add(DeviceModelConstants.IS_SIMULATED_DEVICE, isSimulated);
-
             device.Add(DeviceModelConstants.VERSION, "1.0");
             device.Add(DeviceModelConstants.OBJECT_TYPE, "DeviceInfo"); 
 
@@ -101,8 +129,7 @@ namespace IoTDeviceRegistration
 
         private async void RegistrationBtn_Click(object sender, RoutedEventArgs e)
         {
-            DeviceClient deviceClient = DeviceClient.CreateFromConnectionString("Your Device Connection String", TransportType.Http1);
-
+            await UpdateReportedProperties(DefaultReportedProperties());
             dynamic device = BuildDeviceStructure(DeviceID, false);
 
             AssignDeviceProperties(DeviceID, device);
@@ -123,7 +150,6 @@ namespace IoTDeviceRegistration
             {
                 hash = -hash;
             }
-
             return hash % maxValueExclusive;
         }
     }
