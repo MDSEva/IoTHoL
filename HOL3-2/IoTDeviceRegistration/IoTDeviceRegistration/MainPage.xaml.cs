@@ -32,9 +32,9 @@ namespace IoTDeviceRegistration
     public sealed partial class MainPage : Page
     {
 
-        private const string DeviceID = "test2";
-        private const string DEVICE_CONNECTION_STRING = "HostName=hancomrmsuite2ad15.azure-devices.net;DeviceId=test2;SharedAccessKey=VPwfO44MurYFQZOtvApfToild/DgqrhhaXQ8TemUZkM=";
-        static private Twin deviceTwin;
+        private const string DeviceID = "====Your Device ID====";
+        private const string DEVICE_CONNECTION_STRING = "====Device Connection String====";
+
         private static DeviceClient deviceClient;
         public MainPage()
         {
@@ -51,8 +51,8 @@ namespace IoTDeviceRegistration
                 DeviceState = "Normal",
                 Location = new
                 {
-                    Latitude = 37.497942,
-                    Longitude = 127.027621
+                    Latitude = 37.400696,
+                    Longitude = 127.112183
                 }
             };
 
