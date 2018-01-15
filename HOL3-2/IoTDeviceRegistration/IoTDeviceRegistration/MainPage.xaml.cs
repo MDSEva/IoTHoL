@@ -21,8 +21,8 @@ namespace IoTDeviceRegistration
     public sealed partial class MainPage : Page
     {
 
-        private const string DeviceID = "hancomtower";
-        private const string DEVICE_CONNECTION_STRING = "HostName=hancomrmsuite2ad15.azure-devices.net;DeviceId=hancomtower;SharedAccessKey=dsku+Wi13V3GAPeEzSEm+KRCXYUbrPCrfh0oGbuP82I=";
+        private const string DeviceID = "====insert your device id====";
+        private const string DEVICE_CONNECTION_STRING = "====insert your device connection string====";
 
         private static DeviceClient deviceClient;
         public MainPage()
