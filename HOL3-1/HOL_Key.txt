@@ -1,0 +1,21 @@
+===IoT Hub Name===
+
+===IoT Hub Connection String===
+
+===Event Hub Name(Service Bus Name)===
+
+===Event Hub Name(Event Hub Entity Name)===
+
+===Event Hub Policy Name===
+
+===Event Hub Policy Key===
+
+===Event Hub Connection String===
+
+===Storage Name===
+
+===Storage Key===
+
+===Device ID===
+
+===Device Connection String===
